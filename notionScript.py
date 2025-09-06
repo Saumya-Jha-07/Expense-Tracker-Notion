@@ -7,9 +7,8 @@ load_dotenv()
 
 # constants
 NOTION_TOKEN = os.getenv("NOTION_TOKEN")
-MONTH_WISE_DB_ID = {
-    "september" : os.getenv("Sept_db_id")
-}
+ALL_MONTH_DB_ID = os.getenv("all_month_db_id")
+
 num_to_month = {
     1: "january",
     2: "february",
@@ -27,7 +26,7 @@ num_to_month = {
 headers = {
         "Authorization": f"Bearer {NOTION_TOKEN}",
         "Notion-Version": "2022-06-28"
-    }
+}
 
 def get_month():
     while True:
@@ -85,27 +84,18 @@ def get_daily_db_jsonData(db_id , notes , category , amount , today):
         }
     }
 
-def get_headers():
-    return {
-        "Authorization": f"Bearer {NOTION_TOKEN}",
-        "Notion-Version": "2022-06-28"
-    }
+def update_monthly_amount(newAmount,monthName):
+    try:
+        db_id = os.getenv("all_month_db_id")
+    except Exception as e:
+        print(f"❌ Error in fetching db id : {e}")
+        return 
 
-def add_expense():
-    # getting the data
-    user_month = get_month()
-    notes = get_notes()
-    category = get_category()
-    amount = get_amount()
-    today = get_date()
+    # get the current amt
+    # add naya amt
+    # again post the data
 
-    # month checking
-    db_id = MONTH_WISE_DB_ID.get(user_month)
-    if not db_id:
-        print(f"❌ No database found for '{user_month}'")
-        return
-
-
+def save_to_notion(db_id,notes,category,amount,today,user_month):
     #api call 
     url = "https://api.notion.com/v1/pages"
 
@@ -121,7 +111,25 @@ def add_expense():
     
     print(f"Addded Expense to {user_month} month: {category} - {amount} - {today} ✅")
 
+def add_expense():
+    # getting the data
+    user_month = get_month()
+    notes = get_notes()
+    category = get_category()
+    amount = get_amount()
+    today = get_date()
 
+    key = f"{user_month}_{datetime.now().year}_db_id"
+    try:
+        db_id = os.getenv(key)
+    except:
+        print(f"❌ Error in getting the db of '{user_month}'")
+        return
+    
+    save_to_notion(db_id,notes,category,amount,today,user_month)
+
+    # for updating the total spent in a month
+    update_monthly_amount(amount,user_month)
 
 # def main():
 #     print("Welcome to notion expense tracker !\n")
