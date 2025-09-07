@@ -84,16 +84,49 @@ def get_daily_db_jsonData(db_id , notes , category , amount , today):
         }
     }
 
-def update_monthly_amount(newAmount,monthName):
-    try:
-        db_id = os.getenv("all_month_db_id")
-    except Exception as e:
-        print(f"❌ Error in fetching db id : {e}")
-        return 
+def get_pageId_and_currentExp(monthName):
+    db_id = os.getenv('all_month_db_id')
+    if not db_id:
+        print(f"❌ No DB found ")
+        return
 
+    url = f"https://api.notion.com/v1/databases/{db_id}/query"
+    try :
+        res = requests.post(url,headers=headers)
+        res.raise_for_status()
+    except Exception as e:
+        print("❌ Error in api call : {e}")
+        return 
+    data = res.json()
+
+    for row in data["results"]:
+        month = row["properties"]["Name"]["title"][0]["text"]["content"]
+        if month.lower() == monthName.lower():
+            pageId = row["id"]
+            current_expense = row["properties"]["Total Expense"]["number"] or 0
+            return pageId,current_expense
+    return None,0
+   
+def update_exp(pageId , newAmt):
+    url = f"https://api.notion.com/v1/pages/{pageId}"
+    data = {
+        "properties": {
+            "Total Expense": {"number": newAmt}
+        }
+    }
+    res = requests.patch(url, headers=headers, json=data)
+    if not res.status_code == 200:
+        print("❌ Error:", res.text)    
+
+def update_monthly_amount(newAmount,monthName):
     # get the current amt
-    # add naya amt
-    # again post the data
+    pageId , currentAmt = get_pageId_and_currentExp(monthName)
+    # now total amount will be
+    total_amt = newAmount + currentAmt
+    # now edit the data by POST req
+    update_exp(pageId,total_amt)
+    # confirmation message
+    print(f"✅ Updated {monthName}'s total expense from {currentAmt} to {total_amt}")
 
 def save_to_notion(db_id,notes,category,amount,today,user_month):
     #api call 
@@ -103,7 +136,7 @@ def save_to_notion(db_id,notes,category,amount,today,user_month):
     daily_json = get_daily_db_jsonData(db_id,notes,category,amount,today)
 
     try:
-        res = requests.post(url , headers=headers , json=daily_json)
+        res = requests.post(url , headers=headers , json=daily_json) # new row is being created
         res.raise_for_status()
     except requests.exceptions.RequestException as e:
         print(f"API Error : {e.response.text}")
@@ -120,14 +153,12 @@ def add_expense():
     today = get_date()
 
     key = f"{user_month}_{datetime.now().year}_db_id"
-    try:
-        db_id = os.getenv(key)
-    except:
-        print(f"❌ Error in getting the db of '{user_month}'")
+    db_id = os.getenv(key)
+    if not db_id:
+        print(f"❌ No DB found for {user_month}")
         return
-    
-    save_to_notion(db_id,notes,category,amount,today,user_month)
 
+    save_to_notion(db_id,notes,category,amount,today,user_month)
     # for updating the total spent in a month
     update_monthly_amount(amount,user_month)
 
