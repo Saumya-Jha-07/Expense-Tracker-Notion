@@ -29,7 +29,6 @@ This tool helps you record expenses into Notion with proper categorization while
 1. Clone this repo  
   - git clone https://github.com/Saumya-Jha-07/Expense-Tracker-Notion.git
   - cd monthly-expense-tracker
-  - Create a .env file with:
 
 2. Install Dependencies
   - pip install requests python-dotenv
