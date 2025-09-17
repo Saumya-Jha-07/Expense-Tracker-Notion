@@ -120,7 +120,12 @@ def update_exp(pageId , newAmt):
 
 def update_monthly_amount(newAmount,monthName):
     # get the current amt
-    pageId , currentAmt = get_pageId_and_currentExp(monthName)
+    res = get_pageId_and_currentExp(monthName)
+    if res == None: 
+        print("Not able to get pageId !")
+        return 
+    pageId = res[0]
+    currentAmt = res[1]
     # now total amount will be
     total_amt = newAmount + currentAmt
     # now edit the data by POST req
@@ -139,7 +144,7 @@ def save_to_notion(db_id,notes,category,amount,today,user_month):
         res = requests.post(url , headers=headers , json=daily_json) # new row is being created
         res.raise_for_status()
     except requests.exceptions.RequestException as e:
-        print(f"API Error : {e.response.text}")
+        print(f"API Error : {e}")
         return 
     
     print(f"Addded Expense to {user_month} month: {category} - {amount} - {today} ✅")
@@ -162,23 +167,26 @@ def add_expense():
     # for updating the total spent in a month
     update_monthly_amount(amount,user_month)
 
-# def main():
-#     print("Welcome to notion expense tracker !\n")
-#     while True:
-#         print("1. Add a new expense : \n2. View all the expenses : \n3. Exit the app")
-#         choice = input("Enter your choice : ").strip()
+def view_expenses():
+    pass
 
-#         match choice:
-#             case "1":
-#                 add_expense()
-#             case "2":
-#                 # view_expenses()
-#                 pass
-#             case "3":
-#                 print("😊 Thankyou for ur visit!")
-#                 break
-#             case _:
-#                 print("Please enter a valid choice !")
+def main():
+    print("Welcome to notion expense tracker !\n")
+    while True:
+        print("1. Add a new expense : \n2. View all the expenses : \n3. Exit the app")
+        choice = input("Enter your choice : ").strip()
+
+        match choice:
+            case "1":
+                add_expense()
+            case "2":
+                # view_expenses()
+                pass
+            case "3":
+                print("😊 Thankyou for ur visit!")
+                break
+            case _:
+                print("Please enter a valid choice !")
 
 if __name__ == "__main__":
-    add_expense()
+    main()
