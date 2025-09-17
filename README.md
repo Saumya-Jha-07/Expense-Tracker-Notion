@@ -29,7 +29,6 @@ This tool helps you record expenses into Notion with proper categorization while
 1. Clone this repo  
   - git clone https://github.com/Saumya-Jha-07/Expense-Tracker-Notion.git
   - cd monthly-expense-tracker
-  - Create a .env file with:
 
 2. Install Dependencies
   - pip install requests python-dotenv
@@ -57,20 +56,20 @@ This tool helps you record expenses into Notion with proper categorization while
 
 📝 Example Usage
 
-Enter the month (1-12): 9
-Enter the notes : Bought Groceries
-Enter the category : Food
-Enter amount : 200
-Enter the date in yyyy-mm-dd format (leave blank for today):
-✅ Added Expense to september month: Food - 200 - 2025-09-01
-✅ Updated september's total expense from 500 to 700
+- Enter the month (1-12): 9
+- Enter the notes : Bought Groceries
+- Enter the category : Food
+- Enter amount : 200
+- Enter the date in yyyy-mm-dd format (leave blank for today):
+- ✅ Added Expense to september month: Food - 200 - 2025-09-01
+- ✅ Updated september's total expense from 500 to 700
 
 💡 # Problem It Solves
 Managing personal expenses is often scattered across notes, Excel sheets, or just forgotten.
 This project solves that by:
-Centralizing expenses in Notion, where they are easy to view and analyze.
-Automatically updating monthly totals when you log a new expense.
-Keeping the workflow simple — just run a script and input your expense details.
+1. Centralizing expenses in Notion, where they are easy to view and analyze.
+2. Automatically updating monthly totals when you log a new expense.
+3. Keeping the workflow simple — just run a script and input your expense details.
 
 🔮 ## Future Roadmap
 
@@ -79,27 +78,27 @@ But the vision is to evolve it into a full-fledged multi-user web application.
 
 🥅 Short-Term Goals (1–2 months)
 
-Add view functionality: query expenses by category, date, or month.
-Export expenses to CSV/Excel for easy analysis.
-Improve error handling and logging.
-Add support for auto-creating monthly DBs if not found in Notion.
+1. Add view functionality: query expenses by category, date, or month.
+2. Export expenses to CSV/Excel for easy analysis.
+3. Improve error handling and logging.
+4. Add support for auto-creating monthly DBs if not found in Notion.
 
 🚀 Mid-Term Goals (3–6 months)
 
-Build a web dashboard for expense tracking.
-Multi-user authentication system.
-Support both:
-  Notion sync (for users who want to connect Notion DBs).
-  Standalone DB (PostgreSQL/MySQL/SQLite) for those who don’t use Notion.
-Add charts & analytics (monthly breakdown, category-wise distribution).
+1. Build a web dashboard for expense tracking.
+2. Multi-user authentication system.
+3. Support both:
+  - Notion sync (for users who want to connect Notion DBs).
+  - Standalone DB (PostgreSQL/MySQL/SQLite) for those who don’t use Notion.
+4. Add charts & analytics (monthly breakdown, category-wise distribution).
 
 🌍 Long-Term Goals (6–12 months)
 
-User settings for choosing:
-Primary storage → Notion / Web DB / Both
-Add AI-powered insights (e.g., “You’re overspending on Food this month”).
-Add budgeting features (set limits, alerts when close to limit).
-Community features (optional): share expense trends with family/friends.
+1. User settings for choosing:
+  - Primary storage → Notion / Web DB / Both
+2. Add AI-powered insights (e.g., “You’re overspending on Food this month”).
+3. Add budgeting features (set limits, alerts when close to limit).
+4. Community features (optional): share expense trends with family/friends.
 
 So the journey is: CLI → Web App → Multi-user platform with analytics.
 
