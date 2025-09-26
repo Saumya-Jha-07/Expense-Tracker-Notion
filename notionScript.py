@@ -95,7 +95,7 @@ def get_pageId_and_currentExp(monthName):
         res = requests.post(url,headers=headers)
         res.raise_for_status()
     except Exception as e:
-        print("❌ Error in api call : {e}")
+        print(f"❌ Error in api call : {e}")
         return 
     data = res.json()
 
