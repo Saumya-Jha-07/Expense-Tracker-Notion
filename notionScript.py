@@ -168,19 +168,50 @@ def add_expense():
     update_monthly_amount(amount,user_month)
 
 def view_expenses():
-    pass
+    user_month = get_month()
+    key = f"{user_month}_{datetime.now().year}_db_id"
+    db_id = os.getenv(key)
+    if not db_id:
+        print(f"❌ No DB found for {user_month}")
+        return
+    
+    url = f"https://api.notion.com/v1/databases/{db_id}/query"
+    try :
+        res = requests.post(url,headers=headers)
+        res.raise_for_status()
+    except Exception as e:
+        print(f"❌ Error in api call : {e}")
+        return 
+    data = res.json()
+    
+    total = 0
+    categories = {}
+    for row in data["results"]:
+        total += row["properties"]["Amount"]["number"]
+        category = row["properties"]["Category"]["select"]["name"].lower()
+        if not category in categories:
+            categories[category] = 0
+        
+    for row in data["results"]:
+        category = row["properties"]["Category"]["select"]["name"].lower()
+        amt = row["properties"]["Amount"]["number"]
+        categories[category] += amt
+    
+    print(f"Your total expense is : {total}")    
+    for cat,amt in categories.items():
+        print(f"Expense on {cat} is {amt}")
 
 def main():
     print("Welcome to notion expense tracker !\n")
     while True:
-        print("1. Add a new expense : \n2. View all the expenses : \n3. Exit the app")
+        print("1. Add a new expense : \n2. View expenses : \n3. Exit the app")
         choice = input("Enter your choice : ").strip()
 
         match choice:
             case "1":
                 add_expense()
             case "2":
-                # view_expenses()
+                view_expenses()
                 pass
             case "3":
                 print("😊 Thankyou for ur visit!")
