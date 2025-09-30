@@ -147,7 +147,7 @@ def save_to_notion(db_id,notes,category,amount,today,user_month):
         print(f"API Error : {e}")
         return 
     
-    print(f"Addded Expense to {user_month} month: {category} - {amount} - {today} ✅")
+    print(f"Added Expense to {user_month} month: {category} - {amount} - {today} ✅")
 
 def add_expense():
     # getting the data
@@ -166,6 +166,17 @@ def add_expense():
     save_to_notion(db_id,notes,category,amount,today,user_month)
     # for updating the total spent in a month
     update_monthly_amount(amount,user_month)
+
+def detailed_expense(data,category):
+    print()
+    for row in data["results"]:
+        cat = row["properties"]["Category"]["select"]["name"].lower()
+
+        if cat == category:
+            note = row["properties"]["Notes"]["title"][0]["text"]["content"]
+            amt = row["properties"]["Amount"]["number"]
+            print(f"{note} - {amt}")
+    print()
 
 def view_expenses():
     user_month = get_month()
@@ -197,9 +208,23 @@ def view_expenses():
         amt = row["properties"]["Amount"]["number"]
         categories[category] += amt
     
-    print(f"Your total expense is : {total}")    
+    print()
+    print(f"Your total expense is {total} Rs. :- ")    
     for cat,amt in categories.items():
-        print(f"Expense on {cat} is {amt}")
+        print(f"Expense on {cat} is {amt} i.e. {((amt/total)*100):.2f} %")
+    print()
+
+    needDetailed = input("If you want detailed split , press Y/y else N/n : ").strip().lower()
+    if needDetailed == "y":    
+        while True:
+            category = input("Enter the category : ").strip().lower()
+            detailed_expense(data,category)
+
+            toContinue = input("To exit , press exit : ").strip().lower()
+            if toContinue == "exit":
+                break
+
+            else : continue
 
 def main():
     print("Welcome to notion expense tracker !\n")
