@@ -175,7 +175,8 @@ def detailed_expense(data,category):
         if cat == category:
             note = row["properties"]["Notes"]["title"][0]["text"]["content"]
             amt = row["properties"]["Amount"]["number"]
-            print(f"{note} - {amt}")
+            date = row["properties"]["Date"]["date"]["start"]
+            print(f"{note} - {amt} - {date}")
     print()
 
 def view_expenses():
